@@ -4,6 +4,8 @@ import keys
 import urllib.request
 import json
 import subprocess
+import os
+import glob
 
 #####Tweepy API Authentication stuff#######
 auth = tweepy.OAuthHandler(keys.consumer_key, keys.consumer_secret)
@@ -20,7 +22,7 @@ def searchTwitter(searchTerm):
     tweetText = ''
     tweetUrl = ''
 
-    numTweets = 100
+    numTweets = 500
     imageList = []
     alreadyTried = []
     textList = []
@@ -43,11 +45,16 @@ def searchTwitter(searchTerm):
         except(tweepy.TweepError, KeyError):
             pass
 
+    files = glob.glob('resources/imageGen/*')
+    for f in files:
+        os.remove(f)
 
+    nameCounter = 1
     for k in range(len(imageList)):
         # Save the image at the URL to a file
-        fileName = "resources/imageFile" + str(k) + ".jpg"
+        fileName = "resources/imageGen/img" + "{0:0=3d}".format(nameCounter) + ".jpg"
         if(imageList[k] not in alreadyTried):
+            nameCounter+=1
             try:
                 urllib.request.urlretrieve(imageList[k], fileName)
                 finalImageList.append(imageList[k])
@@ -58,12 +65,22 @@ def searchTwitter(searchTerm):
                 return -1
         alreadyTried.append(imageList[k])
 
+    # Remove the DS store file on mac if present
+    if os.path.exists("resources/imageGen/.DS_Store"):
+        os.remove("resources/imageGen/.DS_Store")
+
+    with os.scandir('resources/imageGen/') as entries:
+        f = open("imageNames.txt", "w")
+        for entry in entries:
+            f.write("file " + "'" + "resources/imageGen/" + str(entry.name) + "'\n")
+        f.close()
+
     return finalImageList, finalText, finalUrls
 
-#ffmpeg -loop 1 -i img.jpg -c:v libx264 -t 30 -pix_fmt yuv420p out.mp4
-def makeVideo(imageName):
-    subprocess.run(["ffmpeg", "-loop", "1", "-i", imageName, "-c:v", "libx264" ,"-t",
-    "30", "-pix_fmt", "yuv420p", "out.mp4"], stdout=subprocess.PIPE)
+# ffmpeg -framerate 1 -i resources/imageGen/img%03d.jpg output.mp4
+
+def makeVideo():
+    subprocess.run(["ffmpeg", "-framerate", "1","-i", "resources/imageGen/img%03d.jpg", "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", "output.mp4"], stdout=subprocess.PIPE)
 
 def main():
     searchTwitter("Cute Turtle")
