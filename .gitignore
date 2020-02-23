@@ -1,4 +1,6 @@
 keys.py
-resources/imageFile.jpg
+resources/imageGen/
 videoVenv/
 __pycache__/
+.DS_Store
+resources/.DS_Store
