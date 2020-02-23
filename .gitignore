@@ -1,2 +1,4 @@
 keys.py
 resources/imageFile.jpg
+videoVenv/
+__pycache__/
