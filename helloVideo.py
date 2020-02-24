@@ -45,6 +45,8 @@ def searchTwitter(searchTerm, numTweets):
             urlList.append(tweetUrl)
         except(tweepy.TweepError, KeyError):
             pass
+        except tweepy.RateLimitError:
+            time.sleep(15 * 60)
 
     files = glob.glob('resources/imageGen/*')
     for f in files:
@@ -53,7 +55,7 @@ def searchTwitter(searchTerm, numTweets):
     nameCounter = 1
     for k in range(len(imageList)):
         # Save the image at the URL to a file
-        fileName = "resources/imageGen/img" + "{0:0=3d}".format(nameCounter) + ".jpg"
+        fileName = "resources/imageGen/img" + "{0:0=3d}".format(nameCounter) + ".png"
         if(imageList[k] not in alreadyTried):
             nameCounter+=1
             try:
@@ -85,7 +87,7 @@ def searchTwitter(searchTerm, numTweets):
 # ffmpeg -framerate 1 -i resources/imageGen/img%03d.jpg output.mp4
 
 def makeVideo():
-    subprocess.run(["ffmpeg", "-framerate", "1/2", "-s", "1920x1080", "-i", "resources/imageGen/img%03d.jpg", "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", "output.mp4"], stdout=subprocess.PIPE)
+    subprocess.run(["ffmpeg", "-framerate", "1", "-s", "1920x1080", "-loglevel", "quiet", "-i", "resources/imageGen/img%03d.png", "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", "output.mp4"], stdout=subprocess.PIPE)
 
 def main():
     searchTwitter("Cute Turtle")
