@@ -6,6 +6,7 @@ import json
 import subprocess
 import os
 import glob
+from textToImage import captionImage
 
 #####Tweepy API Authentication stuff#######
 auth = tweepy.OAuthHandler(keys.consumer_key, keys.consumer_secret)
@@ -15,20 +16,20 @@ api = tweepy.API(auth)
 
 ### Modifying this to take in a twitter username and take the first 10 tweets from their feed
 ### Use Tweepy to search twitter for the first image with a tweet related to the search term
-def searchTwitter(searchTerm):
+def searchTwitter(searchTerm, numTweets):
     #####Getting the image URL from Tweepy#####
     imageUrl = ''
     fileName = "resources/imageFile.jpg"
     tweetText = ''
     tweetUrl = ''
 
-    numTweets = 500
     imageList = []
     alreadyTried = []
     textList = []
     urlList = []
 
     finalImageList = []
+    finalImageNames = []
     finalText = []
     finalUrls = []
 
@@ -73,14 +74,18 @@ def searchTwitter(searchTerm):
         f = open("imageNames.txt", "w")
         for entry in entries:
             f.write("file " + "'" + "resources/imageGen/" + str(entry.name) + "'\n")
+            finalImageNames.append("resources/imageGen/" + str(entry.name))
         f.close()
+
+    for imagePath in finalImageNames:
+        captionImage(imagePath, finalText[finalImageNames.index(imagePath)])
 
     return finalImageList, finalText, finalUrls
 
 # ffmpeg -framerate 1 -i resources/imageGen/img%03d.jpg output.mp4
 
 def makeVideo():
-    subprocess.run(["ffmpeg", "-framerate", "1","-i", "resources/imageGen/img%03d.jpg", "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", "output.mp4"], stdout=subprocess.PIPE)
+    subprocess.run(["ffmpeg", "-framerate", "1/2", "-s", "1920x1080", "-i", "resources/imageGen/img%03d.jpg", "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", "output.mp4"], stdout=subprocess.PIPE)
 
 def main():
     searchTwitter("Cute Turtle")
