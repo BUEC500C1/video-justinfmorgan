@@ -16,8 +16,11 @@ api = tweepy.API(auth)
 
 ### Modifying this to take in a twitter username and take the first 10 tweets from their feed
 ### Use Tweepy to search twitter for the first image with a tweet related to the search term
-def searchTwitter(searchTerm, numTweets):
+def searchTwitter(searchTerm, numTweets, startNum):
     #####Getting the image URL from Tweepy#####
+    if (numTweets > 100):
+        print("Number of tweets must be less than 100")
+        return -1
     imageUrl = ''
     fileName = "resources/imageFile.jpg"
     tweetText = ''
@@ -52,7 +55,7 @@ def searchTwitter(searchTerm, numTweets):
     for f in files:
         os.remove(f)
 
-    nameCounter = 1
+    nameCounter = startNum
     for k in range(len(imageList)):
         # Save the image at the URL to a file
         fileName = "resources/imageGen/img" + "{0:0=3d}".format(nameCounter) + ".png"
@@ -63,6 +66,7 @@ def searchTwitter(searchTerm, numTweets):
                 finalImageList.append(imageList[k])
                 finalText.append(textList[k])
                 finalUrls.append(urlList[k])
+                finalImageNames.append(fileName)
             except(ValueError):
                 print("Unable to find an image associated with the terms requested.")
                 return -1
@@ -72,12 +76,12 @@ def searchTwitter(searchTerm, numTweets):
     if os.path.exists("resources/imageGen/.DS_Store"):
         os.remove("resources/imageGen/.DS_Store")
 
-    with os.scandir('resources/imageGen/') as entries:
-        f = open("imageNames.txt", "w")
-        for entry in entries:
-            f.write("file " + "'" + "resources/imageGen/" + str(entry.name) + "'\n")
-            finalImageNames.append("resources/imageGen/" + str(entry.name))
-        f.close()
+    # with os.scandir('resources/imageGen/') as entries:
+    #     f = open("imageNames.txt", "w")
+    #     for entry in entries:
+    #         f.write("file " + "'" + "resources/imageGen/" + str(entry.name) + "'\n")
+    #         finalImageNames.append("resources/imageGen/" + str(entry.name))
+    #     f.close()
 
     for imagePath in finalImageNames:
         captionImage(imagePath, finalText[finalImageNames.index(imagePath)])
@@ -86,11 +90,14 @@ def searchTwitter(searchTerm, numTweets):
 
 # ffmpeg -framerate 1 -i resources/imageGen/img%03d.jpg output.mp4
 
-def makeVideo():
-    subprocess.run(["ffmpeg", "-framerate", "1", "-s", "1920x1080", "-loglevel", "quiet", "-i", "resources/imageGen/img%03d.png", "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", "output.mp4"], stdout=subprocess.PIPE)
+def makeVideo(start_number, outputName):
+    subprocess.run(["ffmpeg", "-framerate", "1", "-s", "1920x1080", "-loglevel", \
+        "quiet", "-start_number", str(start_number), "-i", "resources/imageGen/img%03d.png", "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", \
+        "-vcodec", "libx264", "-pix_fmt", "yuv420p", str(outputName)], stdout=subprocess.PIPE)
 
-def main():
-    searchTwitter("Cute Turtle")
+def searchAndMakeVideo(searchTerm, numTweets, startNum, outputName):
+    searchTwitter(searchTerm, numTweets, startNum)
+    makeVideo(startNum, outputName)
 
 if __name__ == "__main__":
     main()
