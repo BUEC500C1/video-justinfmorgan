@@ -48,14 +48,12 @@ def searchTwitter(searchTerm, numTweets, startNum):
             urlList.append(tweetUrl)
         except(tweepy.TweepError, KeyError):
             pass
-        except tweepy.RateLimitError:
-            time.sleep(15 * 60)
 
-    files = glob.glob('resources/imageGen/*')
-    for f in files:
-        os.remove(f)
+    # files = glob.glob('resources/imageGen/*')
+    # for f in files:
+    #     os.remove(f)
 
-    nameCounter = startNum
+    nameCounter = startNum*100
     for k in range(len(imageList)):
         # Save the image at the URL to a file
         fileName = "resources/imageGen/img" + "{0:0=3d}".format(nameCounter) + ".png"
@@ -91,8 +89,8 @@ def searchTwitter(searchTerm, numTweets, startNum):
 # ffmpeg -framerate 1 -i resources/imageGen/img%03d.jpg output.mp4
 
 def makeVideo(start_number, outputName):
-    subprocess.run(["ffmpeg", "-framerate", "1", "-s", "1920x1080", "-loglevel", \
-        "quiet", "-start_number", str(start_number), "-i", "resources/imageGen/img%03d.png", "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", \
+    subprocess.run(["ffmpeg", "-y", "-framerate", "1", "-s", "1920x1080", "-loglevel", \
+        "quiet", "-start_number", str(start_number*100), "-i", "resources/imageGen/img%03d.png", "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", \
         "-vcodec", "libx264", "-pix_fmt", "yuv420p", str(outputName)], stdout=subprocess.PIPE)
 
 def searchAndMakeVideo(searchTerm, numTweets, startNum, outputName):
