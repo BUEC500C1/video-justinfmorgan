@@ -1,6 +1,0 @@
-file 'resources/imageGen/img104.png'
-file 'resources/imageGen/img105.png'
-file 'resources/imageGen/img102.png'
-file 'resources/imageGen/img103.png'
-file 'resources/imageGen/img101.png'
-file 'resources/imageGen/img100.png'
