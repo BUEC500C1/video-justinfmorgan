@@ -1,4 +1,4 @@
-from helloVideo import searchAndMakeVideo
+from searchAndVideo import searchTwitter, searchAndMakeVideo
 from multiprocessing import Pool
 import sys
 import os
@@ -6,6 +6,9 @@ import glob
 import tweepy
 
 if __name__ == '__main__':
+
+    if(len(sys.argv) < 2):
+        sys.exit("Please provide at least one search term in quotes as an argument. Quitting.\n")
 
     # Remove all files currently in the folder
     files = glob.glob('resources/imageGen/*')
@@ -29,8 +32,10 @@ if __name__ == '__main__':
         currentarg.append(argIndex)
         currentarg.append(str(sys.argv[argIndex+1]) + ".mp4")
         videoFunctionArguments.append(currentarg)
+
+    # Run multiprocessing on the arguments
     try:
-        p = Pool(5)
+        p = Pool(len(sys.argv)-1)
         p.starmap(searchAndMakeVideo, videoFunctionArguments)
     except tweepy.error.TweepError:
         sys.exit("Tweepy request rate limit exceeded. Quitting.\n")
