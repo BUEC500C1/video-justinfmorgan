@@ -67,8 +67,6 @@ def searchTwitter(searchTerm, numTweets, startNum):
 
     return finalImageList, finalText, finalUrls
 
-# ffmpeg -framerate 1 -i resources/imageGen/img%03d.jpg output.mp4
-
 def makeVideo(start_number, outputName):
     subprocess.run(["ffmpeg", "-y", "-framerate", "1", "-s", "1920x1080", "-loglevel", \
         "quiet", "-start_number", str(start_number*100), "-i", "resources/imageGen/img%03d.png", "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", \
