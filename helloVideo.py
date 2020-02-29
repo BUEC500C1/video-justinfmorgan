@@ -19,7 +19,7 @@ api = tweepy.API(auth)
 def searchTwitter(searchTerm, numTweets, startNum):
     #####Getting the image URL from Tweepy#####
     if (numTweets > 100):
-        print("Number of tweets must be less than 100")
+        print("Number of tweets must be less than 200")
         return -1
     imageUrl = ''
     fileName = "resources/imageFile.jpg"
@@ -49,10 +49,6 @@ def searchTwitter(searchTerm, numTweets, startNum):
         except(tweepy.TweepError, KeyError):
             pass
 
-    # files = glob.glob('resources/imageGen/*')
-    # for f in files:
-    #     os.remove(f)
-
     nameCounter = startNum*100
     for k in range(len(imageList)):
         # Save the image at the URL to a file
@@ -69,17 +65,6 @@ def searchTwitter(searchTerm, numTweets, startNum):
                 print("Unable to find an image associated with the terms requested.")
                 return -1
         alreadyTried.append(imageList[k])
-
-    # Remove the DS store file on mac if present
-    if os.path.exists("resources/imageGen/.DS_Store"):
-        os.remove("resources/imageGen/.DS_Store")
-
-    # with os.scandir('resources/imageGen/') as entries:
-    #     f = open("imageNames.txt", "w")
-    #     for entry in entries:
-    #         f.write("file " + "'" + "resources/imageGen/" + str(entry.name) + "'\n")
-    #         finalImageNames.append("resources/imageGen/" + str(entry.name))
-    #     f.close()
 
     for imagePath in finalImageNames:
         captionImage(imagePath, finalText[finalImageNames.index(imagePath)])

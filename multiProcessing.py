@@ -17,6 +17,10 @@ if __name__ == '__main__':
     for f in files:
         os.remove(f)
 
+    # Remove the DS store file on mac if present
+    if os.path.exists("resources/imageGen/.DS_Store"):
+        os.remove("resources/imageGen/.DS_Store")
+
     numTweets = 100
 
     try:
@@ -24,7 +28,7 @@ if __name__ == '__main__':
         p.starmap(searchAndMakeVideo, [["golden retriever", numTweets, 0, "golden.mp4"],
             ["labradoodle", numTweets, 1, "labradoodle.mp4"], 
             ["tibetan mastiff", numTweets, 2, "mastiff.mp4"],
-            ["pomeranian", numTweets, 3, "pomeranian.mp4"], 
+            ["dachshund", numTweets, 3, "dachshund.mp4"], 
             ["shiba inu", numTweets, 4, "shiba.mp4"]])
     except tweepy.error.TweepError:
         sys.exit("Tweepy request rate limit exceeded. Quitting.\n")
