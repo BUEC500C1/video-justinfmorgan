@@ -1,14 +1,9 @@
-from helloVideo import *
+from helloVideo import searchAndMakeVideo
 from multiprocessing import Pool
 import sys
-
-# searchTerms = [["golden retriever", 50, 0],["labradoodle", 50, 100], ["tibetan mastiff", 50, 200],
-#         ["beagle", 50, 300], ["french bulldog", 50, 400]]
-
-
-# def mapHelper(p):
-#     output = searchAndMakeVideo(p)
-#     return output
+import os
+import glob
+import tweepy
 
 if __name__ == '__main__':
 
