@@ -3,4 +3,4 @@ videoVenv/
 __pycache__/
 .DS_Store
 resources/.DS_Store
-./keys
+keys
