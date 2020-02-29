@@ -1,14 +1,9 @@
-from helloVideo import *
+from helloVideo import searchAndMakeVideo
 from multiprocessing import Pool
 import sys
-
-# searchTerms = [["golden retriever", 50, 0],["labradoodle", 50, 100], ["tibetan mastiff", 50, 200],
-#         ["beagle", 50, 300], ["french bulldog", 50, 400]]
-
-
-# def mapHelper(p):
-#     output = searchAndMakeVideo(p)
-#     return output
+import os
+import glob
+import tweepy
 
 if __name__ == '__main__':
 
@@ -23,12 +18,19 @@ if __name__ == '__main__':
 
     numTweets = 100
 
+    # Create a list of lists of the function arguments required to starmap
+    # to searchAndMakeVideo
+    videoFunctionArguments = []
+    for argIndex in range(len(sys.argv)-1):
+        currentarg = []
+        # Skip over first argument to avoid the script name
+        currentarg.append(str(sys.argv[argIndex+1]))
+        currentarg.append(numTweets)
+        currentarg.append(argIndex)
+        currentarg.append(str(sys.argv[argIndex+1]) + ".mp4")
+        videoFunctionArguments.append(currentarg)
     try:
         p = Pool(5)
-        p.starmap(searchAndMakeVideo, [["golden retriever", numTweets, 0, "golden.mp4"],
-            ["labradoodle", numTweets, 1, "labradoodle.mp4"], 
-            ["tibetan mastiff", numTweets, 2, "mastiff.mp4"],
-            ["dachshund", numTweets, 3, "dachshund.mp4"], 
-            ["shiba inu", numTweets, 4, "shiba.mp4"]])
+        p.starmap(searchAndMakeVideo, videoFunctionArguments)
     except tweepy.error.TweepError:
         sys.exit("Tweepy request rate limit exceeded. Quitting.\n")
