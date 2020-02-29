@@ -6,16 +6,12 @@ import configparser
 import os
 
 config = configparser.ConfigParser()
-config.read('keys')
+config.read("keys")
 auth = tweepy.OAuthHandler(config.get('auth', 'consumer_key').strip(),
                            config.get('auth', 'consumer_secret').strip())
 
 auth.set_access_token(config.get('auth', 'access_token').strip(),
                       config.get('auth', 'access_secret').strip())
-
-#####Tweepy API Authentication stuff#######
-# auth = tweepy.OAuthHandler(keys.consumer_key, keys.consumer_secret)
-# auth.set_access_token(keys.access_token, keys.access_token_secret)
 
 api = tweepy.API(auth)
 
