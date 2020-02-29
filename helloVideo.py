@@ -1,11 +1,7 @@
-import io
 import tweepy
 import keys
 import urllib.request
-import json
 import subprocess
-import os
-import glob
 from textToImage import captionImage
 
 #####Tweepy API Authentication stuff#######
@@ -19,7 +15,7 @@ api = tweepy.API(auth)
 def searchTwitter(searchTerm, numTweets, startNum):
     #####Getting the image URL from Tweepy#####
     if (numTweets > 100):
-        print("Number of tweets must be less than 200")
+        print("Number of tweets must be less than 100")
         return -1
     imageUrl = ''
     fileName = "resources/imageFile.jpg"
@@ -81,6 +77,3 @@ def makeVideo(start_number, outputName):
 def searchAndMakeVideo(searchTerm, numTweets, startNum, outputName):
     searchTwitter(searchTerm, numTweets, startNum)
     makeVideo(startNum, outputName)
-
-if __name__ == "__main__":
-    main()
