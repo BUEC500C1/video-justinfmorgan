@@ -34,8 +34,8 @@ if __name__ == '__main__':
         videoFunctionArguments.append(currentarg)
 
     # Run multiprocessing on the arguments
-    try:
-        p = Pool(len(sys.argv)-1)
-        p.starmap(searchAndMakeVideo, videoFunctionArguments)
-    except tweepy.error.TweepError:
-        sys.exit("Tweepy request rate limit exceeded. Quitting.\n")
+    # try:
+    p = Pool(len(sys.argv)-1)
+    p.starmap(searchAndMakeVideo, videoFunctionArguments)
+    # except tweepy.error.TweepError:
+    #     sys.exit("Tweepy request rate limit exceeded. Quitting.\n")
